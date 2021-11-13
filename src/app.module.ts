@@ -5,22 +5,19 @@ import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { enviroments } from './enviroments';
+import config from './config';
 
-const API_KEY = '12345$$';
-const API_KEY_PROD = 'Prod12345$$';
 @Module({
   imports: [
     UsersModule,
     ProductsModule,
     HttpModule,
     DatabaseModule,
+    // ConfigModule sirve para settear las variables de entorno en toda la app cuando isGlobal es true.
     ConfigModule.forRoot({
-      envFilePath: [
-        '.env.development.local',
-        '.env.development',
-        '.env.local',
-        '.env',
-      ],
+      envFilePath: enviroments[process.env.NODE_ENV] || '.env',
+      load: [config],
       isGlobal: true, // set to true if you want to use the same config for all environments
     }),
   ],
