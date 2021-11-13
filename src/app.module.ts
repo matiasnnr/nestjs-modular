@@ -3,11 +3,27 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 const API_KEY = '12345$$';
 const API_KEY_PROD = 'Prod12345$$';
 @Module({
-  imports: [UsersModule, ProductsModule, HttpModule],
+  imports: [
+    UsersModule,
+    ProductsModule,
+    HttpModule,
+    DatabaseModule,
+    ConfigModule.forRoot({
+      envFilePath: [
+        '.env.development.local',
+        '.env.development',
+        '.env.local',
+        '.env',
+      ],
+      isGlobal: true, // set to true if you want to use the same config for all environments
+    }),
+  ],
   controllers: [AppController],
   providers: [
     // Esto es lo mismo que el comentario de abajo
@@ -18,11 +34,11 @@ const API_KEY_PROD = 'Prod12345$$';
     // usando solo el nombre del servicio, tal como está arriba.
     //   useClass: AppService,
     // },
-    {
-      provide: 'API_KEY',
-      // useValue sirve para pasar valores a toda la app.
-      useValue: process.env.NODE_ENV === 'prod' ? API_KEY_PROD : API_KEY,
-    },
+    // {
+    //   provide: 'API_KEY',
+    //   // useValue sirve para pasar valores a toda la app.
+    //   useValue: process.env.NODE_ENV === 'prod' ? API_KEY_PROD : API_KEY,
+    // },
     {
       provide: 'TASKS',
       // useFactory sirve para trabajar con funciones asincronas.
