@@ -14,7 +14,7 @@ import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) { }
 
   @Get()
   findAll() {
@@ -24,6 +24,11 @@ export class UsersController {
   @Get(':id')
   get(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
+  }
+
+  @Get(':id/orders')
+  getOrders(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.getOrdersByUser(id);
   }
 
   @Post()
